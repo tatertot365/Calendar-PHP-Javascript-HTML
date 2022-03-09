@@ -1,0 +1,73 @@
+ul {list-style-type: none;}
+body {font-family: Verdana, sans-serif;}
+
+
+.month {
+  padding: 70px 25px;
+  width: 97.%;
+  background: royalblue;
+  text-align: center;
+}
+
+
+.month ul {
+  margin: 0;
+  padding: 0;
+}
+
+.month ul li {
+  color: white;
+  font-size: 20px;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+}
+
+
+.month .prev {
+  float: left;
+  padding-top: 10px;
+}
+
+
+.month .next {
+  float: right;
+  padding-top: 10px;
+}
+
+
+.weekdays {
+  margin: 0;
+  padding: 10px 0;
+  background-color:#ddd;
+}
+
+.weekdays li {
+  display: inline-block;
+  width: 13.6%;
+  color: royalblue;
+  text-align: center;
+}
+
+
+.days {
+  padding: 10px 0;
+  background: #eee;
+  margin: 0;
+}
+
+.days li {
+  list-style-type: none;
+  display: inline-block;
+  width: 13.6%;
+  height: 5cm;
+  text-align: left;
+  margin-bottom: 5px;
+  font-size:12px;
+  color: royalblue;
+}
+
+/* Highlight the "current" day */
+.days li:hover {
+  background: royalblue !important;
+  color: white !important
+}

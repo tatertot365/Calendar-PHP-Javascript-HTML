@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+</head>
+<link rel='stylesheet' href="calendar.css">
+</head>
+<body>
+
+<div class="month">      
+  <ul>
+    <li class="prev"><a href="calendar.html">&#10094;</a></li>
+    <li>
+      march<br>
+      <span style="font-size:18px">2022</span>
+    </li>
+  </ul>
+</div>
+
+<ul class="weekdays">
+  <li>Monday</li>
+  <li>Tuesday</li>
+  <li>Wednesday</li>
+  <li>Thursday</li>
+  <li>Friday</li>
+  <li>Saturday</li>
+  <li>Sunday</li>
+</ul>
+
+<ul class="days" onclick="location.href='eventForm.html'">  
+  <li>-</li>  
+  <li id="01">1</li>
+  <li style="background-color: lightblue;">2
+    <h1 style="text-align: center;">Ash Wednesday</h1>
+</li>
+  <li id="03">3</li>
+  <li id="04">4</li>
+  <li id="05">5</li>
+  <li id="06">6</li>
+  <li id="07">7</li>
+  <li id="08">8</li>
+  <li id="09">9</li>
+  <li id="10">10</li>
+  <li id="11">11</li>
+  <li id="12">12</li>
+  <li id="13">13</li>
+  <li style="background-color: lightblue;">14
+    <h1 style="text-align: center;">Pi Day</h1>
+</li>
+<li id="15">15</li>
+<li id="16">16</li>
+<li id="17">17</li>
+<li id="18">18</li>
+<li id="19">19</li>
+<li id="20">20</li>
+<li id="21">21</li>
+<li id="22">22</li>
+<li id="23">23</li>
+<li id="24">24</li>
+<li id="25">25</li>
+<li id="26">26</li>
+<li id="27">27</li>
+<li id="28">28</li>
+  <li id="29">29</li>
+  <li id="30">30</li>
+  <li id="31">31</li>
+</ul>
+
+<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+<script>
+  $(document).ready(function() {
+    $.get("getEvents.php", function(data) {
+      console.log(data)
+      var eventsJSON = JSON.parse(data)
+      for (let iCount = 0; iCount < eventsJSON.length; iCount++) {
+        let month = eventsJSON[iCount]["Event_Date"];
+        month = JSON.stringify(month)
+
+        let day = month.charAt(9) + month.charAt(10);
+        month = month.charAt(7);
+
+        let time = eventsJSON[iCount]["Event_Time"];
+        time = JSON.stringify(time)
+
+        let notes = eventsJSON[iCount]["Event_Notes"];
+        notes = JSON.stringify(notes)
+
+        let output = time + " - " + notes;
+
+        if (month == "3") {
+          let location = document.getElementById(day)
+          location.innerHTML = location.innerHTML + "<br><br>" + output
+          location.style.backgroundColor = "darkblue"
+          location.style.color="white"
+        }
+      }
+    });
+  });
+</Script>
+</body>
+</html>
+</html>

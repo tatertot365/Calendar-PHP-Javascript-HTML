@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+</head>
+<link rel='stylesheet' href="calendar.css">
+
+<style>
+  #form {
+    position: fixed;
+    height: 200px;
+    width: 500px;
+    text-align: center;
+    background-color: blue;
+    color: white;
+    border: solid black 2px;
+    padding-top: 2cm;
+    z-index: 2000;
+    margin-left: 15cm;
+  }
+
+</style>
+</head>
+<body onload="loadEvents(2)">
+
+<div class="month">      
+  <ul>
+    <li class="prev"><button type="button" onclick="prevMonth(currentMonth - 1)">&#10094;</button></li>
+    <li class="next"> <button type="button" onclick="nextMonth(currentMonth + 1)">&#10095;</li>
+    <li id="currentMonth">
+      February 2022<br>
+      <!--<button type="button" onclick="href='logout.php'">logout</button>-->
+    </li>
+  </ul>
+</div>
+
+<ul class="weekdays">
+  <li>Monday</li>
+  <li>Tuesday</li>
+  <li>Wednesday</li>
+  <li>Thursday</li>
+  <li>Friday</li>
+  <li>Saturday</li>
+  <li>Sunday</li>
+</ul>
+
+<div id="form" hidden>
+    <label for="eventDate">Event Date: </label>
+    <input type="date" name="eventDate" id="eventDate">
+    <br>
+    <br>
+    <label for="eventTime">Event Time:</label>
+    <input type="time" name="eventTime" id="eventTime">
+    <br>
+    <br>
+    <label for="notes">Notes: </label>
+    <input type="text" name="notes" id="notes">
+    <br>
+    <br>
+    <button type="submit" onclick="submitEvent()">Create Event</button>
+</div>
+
+<ul class="days" onclick="showForm()" style="z-index: 0;"> 
+  <li>-</li>
+  <li style="background-color: lightblue;" id="01">1
+    <h1 style="text-align: center;">BLACK HISTORY MONTH STARTS</h1>
+  </li>
+  <li id="02">2</li>
+  <li id="03">3</li>
+  <li id="04">4</li>
+  <li id="05">5</li>
+  <li id="06">6</li>
+  <li id="07">7</li>
+  <li id="08">8</li>
+  <li id="09">9</li>
+  <li id="10">10</li>
+  <li id="11">11</li>
+  <li id="12">12</li>
+  <li id="13">13</li>
+  <li style="background-color: lightblue;">14
+    <h1 style="text-align: center;">Valentine's Day</h1>
+  </li>
+  <li id="15">15</li>
+  <li id="16">16</li>
+  <li id="17">17</li>
+  <li id="18">18</li>
+  <li id="19">19</li>
+  <li id="20">20</li>
+  <li id="21">21</li>
+  <li id="22">22</li>
+  <li id="23">23</li>
+  <li id="24">24</li>
+  <li id="25">25</li>
+  <li id="26">26</li>
+  <li id="27">27</li>
+  <li id="28">28</li>
+  <li></li>
+  <li></li>
+  <li></li>
+  <li></li>
+  <li></li>
+  <li></li>
+  <li></li>
+  <li></li>
+  <li></li>
+</ul>
+
+<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+<script>
+  var currentMonth = 2;
+
+  function loadEvents(mIndex) {
+    $.get("getEvents.php", function(data) {
+      console.log(data)
+      var eventsJSON = JSON.parse(data)
+      for (let iCount = 0; iCount < eventsJSON.length; iCount++) {
+        let month = eventsJSON[iCount]["Event_Date"];
+        month = JSON.stringify(month)
+
+        let day = month.charAt(9) + month.charAt(10);
+        month = month.charAt(7);
+
+        let time = eventsJSON[iCount]["Event_Time"];
+        time = JSON.stringify(time)
+
+        let notes = eventsJSON[iCount]["Event_Notes"];
+        notes = JSON.stringify(notes)
+
+        let output = time + " - " + notes;
+
+        month = parseInt(month);
+
+        if (month == mIndex) {
+          let location = document.getElementById(day)
+          location.innerHTML = location.innerHTML + "<br><br>" + output
+          location.style.backgroundColor = "darkblue"
+          location.style.color="white"
+        }
+      }
+    });
+  }
+
+  function showForm() {
+    $("#form").show();
+
+  }
+
+  function submitEvent() {
+    $("#form").hide();
+
+    JSONstring = {eventDate:document.getElementById("eventDate").value,eventTime:document.getElementById("eventTime").value,notes:document.getElementById("notes").value}
+    $.post("eventSubmit.php", {data: JSON.stringify(JSONstring)}, function(result){
+      console.log(result);
+    });
+  }
+
+  function prevMonth(monthIndex) {
+    if (monthIndex == 1) {
+      var days = document.getElementsByTagName("ul")[2].getElementsByTagName("li");
+      document.getElementById("currentMonth").innerHTML = "January 2022"
+
+      for (let iCount2 = 0; iCount2<6; iCount2++) {
+        days[iCount2].innerHTML = "";
+        days[iCount2].style.backgroundColor = '#eee'
+        days[iCount2].id = iCount2;
+      }
+
+      for (let iCount = 6; iCount<37; iCount++) {
+        days[iCount].innerHTML = "";
+        days[iCount].style.backgroundColor = '#eee'
+
+        if (iCount < 10) {
+          days[iCount].id = "0"+(iCount-5);
+        }
+
+        else {
+          days[iCount].id = (iCount - 5)
+        }
+
+        days[iCount].innerHTML = (iCount-5);
+      }
+
+      document.getElementById("01").style.backgroundColor = "lightblue";
+      document.getElementById("01").innerHTML = document.getElementById("01").innerHTML+ "<h1> NEW YEAR'S DAY <h1>";
+      document.getElementById("01").style.textAlign = "center";
+
+      document.getElementById("17").style.backgroundColor = "lightblue";
+      document.getElementById("17").innerHTML = document.getElementById("17").innerHTML + "<h1> MARTIN LUTHER KING DAY <h1>";
+      document.getElementById("17").style.textAlign = "center";
+
+      loadEvents(monthIndex);
+      currentMonth--;
+    }
+
+    if (monthIndex == 2) {
+      var days = document.getElementsByTagName("ul")[2].getElementsByTagName("li");
+      document.getElementById("currentMonth").innerHTML = "February 2022"
+
+      for (let iCount2 = 0; iCount2<2; iCount2++) {
+        days[iCount2].innerHTML = "";
+        days[iCount2].style.backgroundColor = '#eee'
+        days[iCount2].id = iCount2;
+      }
+
+      for (let iCount = 2; iCount<28; iCount++) {
+        days[iCount].innerHTML = "";
+        days[iCount].style.backgroundColor = '#eee'
+
+        if (iCount < 10) {
+          days[iCount].id = "0"+(iCount-1);
+        }
+
+        else {
+          days[iCount].id = (iCount - 1)
+        }
+
+        days[iCount].innerHTML = (iCount-1);
+      }
+
+      document.getElementById("01").style.backgroundColor = "lightblue";
+      document.getElementById("01").innerHTML = document.getElementById("01").innerHTML +"<h1> BLACK HISTORY MONTH STARTS <h1>";
+      document.getElementById("01").style.textAlign = "center";
+
+      document.getElementById("14").style.backgroundColor = "lightblue";
+      document.getElementById("14").innerHTML = document.getElementById("14").innerHTML + "<h1> VALENTINE'S DAY <h1>";
+      document.getElementById("14").style.textAlign = "center";
+
+      loadEvents(2);
+      currentMonth--;
+    }
+  }
+
+  function nextMonth(monthIndex) {
+    if (monthIndex == 3) {
+      var days = document.getElementsByTagName("ul")[2].getElementsByTagName("li");
+      document.getElementById("currentMonth").innerHTML = "March 2022"
+
+      for (let iCount2 = 0; iCount2<2; iCount2++) {
+        days[iCount2].innerHTML = "";
+        days[iCount2].style.backgroundColor = '#eee'
+        days[iCount2].id = iCount2;
+      }
+
+      for (let iCount = 2; iCount<33; iCount++) {
+        days[iCount].innerHTML = "";
+        days[iCount].style.backgroundColor = '#eee'
+
+        if (iCount < 10) {
+          days[iCount].id = "0"+(iCount-1);
+        }
+
+        else {
+          days[iCount].id = (iCount - 1)
+        }
+
+        days[iCount].innerHTML = (iCount-1);
+      }
+
+      document.getElementById("02").style.backgroundColor = "lightblue";
+      document.getElementById("02").innerHTML = document.getElementById("02").innerHTML+"<h1> ASH WEDNESDAY <h1>";
+      document.getElementById("02").style.textAlign = "center";
+
+      document.getElementById("13").style.backgroundColor = "lightblue";
+      document.getElementById("13").innerHTML = document.getElementById("13").innerHTML+ "<h1> PI DAY <h1>";
+      document.getElementById("13").style.textAlign = "center";
+
+      loadEvents(3);
+      currentMonth++;
+    }
+
+    if (monthIndex == 2) {
+      var days = document.getElementsByTagName("ul")[2].getElementsByTagName("li");
+      document.getElementById("currentMonth").innerHTML = "February 2022"
+
+      for (let iCount2 = 0; iCount2<2; iCount2++) {
+        days[iCount2].innerHTML = "";
+        days[iCount2].style.backgroundColor = '#eee'
+        days[iCount2].id = iCount2;
+      }
+
+      for (let iCount = 2; iCount<30; iCount++) {
+        days[iCount].innerHTML = "";
+        days[iCount].style.backgroundColor = '#eee'
+
+        if (iCount < 10) {
+          days[iCount].id = "0"+(iCount-1);
+        }
+
+        else {
+          days[iCount].id = (iCount - 1)
+        }
+
+        days[iCount].innerHTML = (iCount-1);
+      }
+
+      document.getElementById("01").style.backgroundColor = "lightblue";
+      document.getElementById("01").innerHTML = document.getElementById("01").innerHTML+"<h1> BLACK HISTORY MONTH STARTS <h1>";
+      document.getElementById("01").style.textAlign = "center";
+
+      document.getElementById("14").style.backgroundColor = "lightblue";
+      document.getElementById("14").innerHTML = document.getElementById("14").innerHTML+ "<h1> VALENTINE'S DAY <h1>";
+      document.getElementById("14").style.textAlign = "center";
+
+      loadEvents(2);
+      currentMonth++;
+    }
+  }
+
+
+
+</script>
+</body>
+</html>
+</html>
